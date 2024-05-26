@@ -1,0 +1,26 @@
+{
+	"name": "@doctor/create-tag",
+	"version": "0.1.0",
+	"exports": "./mod.ts",
+	"publish": {
+		"exclude": [
+			".*"
+		]
+	},
+	"compilerOptions": {
+		"lib": [
+			"deno.ns",
+			"dom"
+		]
+	},
+	"fmt": {
+		"useTabs": true,
+		"lineWidth": 128,
+		"indentWidth": 4,
+		"semiColons": false,
+		"singleQuote": true
+	},
+	"tasks": {
+		"ok": "deno fmt && deno lint && deno check *.ts"
+	}
+}
