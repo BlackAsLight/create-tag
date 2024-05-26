@@ -1,7 +1,4 @@
-/**
- * createTag is a simple function offering a simple way to create tags with dynamic properties in your code.
- * @module
- */
+/** @module */
 
 /**
  * The type inferring the attributes on a tag.
