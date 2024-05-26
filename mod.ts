@@ -14,12 +14,20 @@ export type Func<T extends keyof HTMLElementTagNameMap> = (tag: HTMLElementTagNa
 
 /**
  * Creates a HTMLElement with correct typings.
+ * @param type is the name of the HTMLElement.
+ * @param attributes is the attributes of the HTMLElement.
+ * @param func is a function providing the HTMLElement to manipulate.
  */
 export function createTag<T extends keyof HTMLElementTagNameMap>(
 	type: T,
 	attributes: Attribute<T>,
 	func?: Func<T>,
 ): HTMLElementTagNameMap[T]
+/**
+ * Creates a HTMLElement with correct typings.
+ * @param type is the name of the HTMLElement.
+ * @param func is a function providing the HTMLElement to manipulate.
+ */
 export function createTag<T extends keyof HTMLElementTagNameMap>(type: T, func?: Func<T>): HTMLElementTagNameMap[T]
 export function createTag<T extends keyof HTMLElementTagNameMap>(
 	arg1: T,
