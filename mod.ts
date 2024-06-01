@@ -1,51 +1,89 @@
-/** @module */
+/**
+ * @module
+ */
 
 /**
- * The type inferring the attributes on a tag.
+ * A type for a given HTMLElement that filters the available attributes to
+ * values of type string, number, or boolean.
+ *
+ * @example Usage
+ * ```ts
+ * type InputAttributes = Attributes<'input'>
+ * ```
  */
-export type Attribute<T extends keyof HTMLElementTagNameMap> = DeepPartial<HTMLElementTagNameMap[T]>
+export type Attributes<T extends keyof HTMLElementTagNameMap> = Partial<
+	{
+		[
+			U in keyof HTMLElementTagNameMap[T] as HTMLElementTagNameMap[T][U] extends string | number | boolean | null ? U
+				: never
+		]: HTMLElementTagNameMap[T][U]
+	}
+>
+
 /**
- * The type inferring the parameter type of the tag.
+ * A type specifying the structure of the function that can be passed to the
+ * createTag element.
+ *
+ * @example Usage
+ * ```ts
+ * type InputFunc = Func<'input'>
+ * ```
  */
 export type Func<T extends keyof HTMLElementTagNameMap> = (tag: HTMLElementTagNameMap[T]) => unknown
 
 /**
- * A type like Partial, but is meant to go deep!
- */
-export type DeepPartial<T> = {
-	[U in keyof T]?: T[U] extends object ? DeepPartial<T[U]> : T[U]
-}
-
-/**
- * Creates a HTMLElement with correct typings.
- * @param type is the name of the HTMLElement.
- * @param attributes is the attributes of the HTMLElement.
- * @param func is a function providing the HTMLElement to manipulate.
+ * A function that creates a HTMLElement with the correct typings.
+ *
+ * @param type A string containing the name of the HTML element to be created.
+ * @param attributes An object containing the key-value pairs of attributes to
+ * be assigned to the HTML element. Only string, number, and boolean values are
+ * valid.
+ * @param func An optional function that passes the created HTML element as a
+ * parameter before resolving the function.
+ * @returns A HTML element based off what was specified in type.
+ *
+ * @example Usage
+ * ```ts
+ * createTag('button', { textContent: 'Click Me!' }, buttonTag =>
+ *   buttonTag.addEventListener('click', function (_event) {
+ *     console.log(this.outerHTML)
+ *   })).click()
+ * ```
  */
 export function createTag<T extends keyof HTMLElementTagNameMap>(
 	type: T,
-	attributes: Attribute<T>,
+	attributes: Attributes<T>,
 	func?: Func<T>,
 ): HTMLElementTagNameMap[T]
 /**
- * Creates a HTMLElement with correct typings.
- * @param type is the name of the HTMLElement.
- * @param func is a function providing the HTMLElement to manipulate.
+ * A function that creates a HTMLElement with the correct typings.
+ *
+ * @param type A string containing the name of the HTML element to be created.
+ * @param func An optional function that passes the created HTML element as a
+ * parameter before resolving the function.
+ * @returns A HTML element based off what was specified in type.
+ *
+ * @example Usage
+ * ```ts
+ * createTag('button', buttonTag =>
+ *   buttonTag.addEventListener('click', function (_event) {
+ *     console.log("I've been clicked!")
+ *   }))
+ * ```
  */
 export function createTag<T extends keyof HTMLElementTagNameMap>(type: T, func?: Func<T>): HTMLElementTagNameMap[T]
 export function createTag<T extends keyof HTMLElementTagNameMap>(
 	arg1: T,
-	arg2?: Attribute<T> | Func<T>,
+	arg2?: Attributes<T> | Func<T>,
 	arg3?: Func<T>,
 ): HTMLElementTagNameMap[T] {
 	const tag = document.createElement(arg1)
 	if (typeof arg2 === 'function') {
 		arg2(tag)
-	} else {
-		if (arg2) {
-			for (const key in arg2) {
-				// deno-lint-ignore no-explicit-any
-				tag[key] = arg2[key] as any
+	} else if (arg2) {
+		for (const [key, value] of Object.entries(arg2)) {
+			if (value != null) {
+				tag[key as 'id'] = value as string
 			}
 		}
 		if (arg3) {
