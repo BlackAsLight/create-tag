@@ -89,7 +89,7 @@ export type Func<T extends keyof HTMLElementTagNameMap> = (tag: HTMLElementTagNa
  */
 export function createTag<T extends keyof HTMLElementTagNameMap>(
   type: T,
-  children: HTMLElement[],
+  children: (HTMLElement | string)[],
   func?: Func<T>,
 ): HTMLElementTagNameMap[T];
 
@@ -148,7 +148,7 @@ export function createTag<T extends keyof HTMLElementTagNameMap>(
 export function createTag<T extends keyof HTMLElementTagNameMap>(
   type: T,
   attributes: Attributes<T>,
-  children: HTMLElement[],
+  children: (HTMLElement | string)[],
   func?: Func<T>,
 ): HTMLElementTagNameMap[T];
 
@@ -174,8 +174,8 @@ export function createTag<T extends keyof HTMLElementTagNameMap>(type: T, func?:
 
 export function createTag<T extends keyof HTMLElementTagNameMap>(
   arg1: T,
-  arg2?: Attributes<T> | HTMLElement[] | Func<T>,
-  arg3?: HTMLElement[] | Func<T>,
+  arg2?: Attributes<T> | (HTMLElement | string)[] | Func<T>,
+  arg3?: (HTMLElement | string)[] | Func<T>,
   arg4?: Func<T>,
 ): HTMLElementTagNameMap[T] {
   const tag = document.createElement(arg1);
@@ -202,17 +202,3 @@ export function createTag<T extends keyof HTMLElementTagNameMap>(
 
   return tag;
 }
-
-// createTag("a");
-// createTag("a", { textContent: "Hello" });
-// createTag("a", { textContent: "Bye" }, [createTag("br")]);
-// createTag(
-//   "a",
-//   { textContent: "Bye" },
-//   [createTag("br")],
-//   (aTag) => aTag.addEventListener("click", (event) => event.preventDefault()),
-// );
-// createTag("a", { textContent: "Bye" }, (aTag) => aTag.addEventListener("click", (event) => event.preventDefault()));
-// createTag("a", [createTag("br")], (aTag) => aTag.addEventListener("click", (event) => event.preventDefault()));
-// createTag("a", (aTag) => aTag.addEventListener("click", (event) => event.preventDefault()));
-// createTag("a", [createTag("br")]);
